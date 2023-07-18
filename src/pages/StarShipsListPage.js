@@ -1,31 +1,26 @@
-import { useState, useEffect } from "react";
-import { BASE_URL } from "../constants/constants";
-import axios from "axios";
+
 import {Title,PostContainer } from './style'
 import { Card } from '../components/Card/Card'
 
+import useRequestData from '../hooks/useRequestData';
+import { ERROR, LOADING } from '../constants/constants';
+
 
 const  StarShipsListPage = () => {
-  const [starShipsList, setStarShipsList] = useState([]);
+ 
+  const [starShipsList, loading , error] = useRequestData("starships")
 
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/starships`)
-      .then((response) => {
-        setStarShipsList(response.data.results);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },[]);
 
   return (
     <div>
       <Title>Título das Naves</Title>
       <PostContainer>
 
-      {starShipsList.map((starShip) => {
+      {error ? (
+          <img src={ERROR}></img>
+        ) : loading ? (
+          <img src={LOADING}></img>
+        ) :starShipsList.map((starShip) => {
         return(
           <Card 
           key={starShip.name} 
